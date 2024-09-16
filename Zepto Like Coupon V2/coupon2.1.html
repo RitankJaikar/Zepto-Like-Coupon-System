@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zepto Coupon System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+
+        header ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        header li {
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+
+        #showcase {
+            min-height: 400px;
+            background: url('showcase.jpg') no-repeat center center/cover;
+            text-align: center;
+            color: #e8491d;
+            padding: 100px 0;
+        }
+
+        #showcase h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+
+        #showcase p {
+            font-size: 1.5rem;
+        }
+
+        #products {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: #ffffff;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #cccccc;
+            width: calc(30% - 20px);
+            box-sizing: border-box;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+
+        .product h3 {
+            margin: 0;
+            padding: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .product p {
+            margin: 0;
+            font-size: 1rem;
+            color: #666666;
+        }
+
+        .product button {
+            background: #35424a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #cart {
+            background: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        #cart h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        #cart table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #cart th,
+        #cart td {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #total {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        #final-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        #coupon {
+            margin-top: 20px;
+        }
+
+        #coupon-input {
+            padding: 10px;
+            width: 400px;
+            border: 1px solid #cccccc;
+            border-radius: 4px 0 0 4px;
+            margin-bottom: 8px;
+        }
+
+        #coupon-input:disabled {
+            background-color: #cccccc22;
+            cursor: not-allowed;
+        }
+
+        #apply-coupon-btn {
+            background: #e8491d;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            width: 130px;
+        }
+
+        #apply-coupon-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #coupon-error {
+            color: red;
+            margin-top: 5px;
+        }
+
+        #applied-coupon {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .coupon-info {
+            font-size: 1rem;
+            color: green;
+            margin-bottom: 20px;
+        }
+
+        .coupon-info-remaining {
+            color: grey;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">Cart</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section id="showcase">
+        <div class="container">
+            <h1>Welcome to Zepto</h1>
+            <p>Discover our range of products and get the best deals with our exclusive coupons!</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div id="products"></div>
+
+        <div id="cart">
+            <h2>Shopping Cart</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                </tbody>
+            </table>
+            <div id="total">
+                <h3>Final Total: <span id="final-total">₹0.00</span></h3>
+                <h3>Coupon Discount: <span id="coupon-discount">-₹0.00</span></h3>
+                <h3>Grand Total: <span id="grand-total">₹0.00</span></h3>
+            </div>
+            <div id="coupon">
+                <input type="text" id="coupon-input" placeholder="Enter coupon code"><br>
+                <button id="apply-coupon-btn" onclick="applyCoupon()">Apply Coupon</button>
+                <p id="coupon-error"></p>
+                <p id="applied-coupon"></p>
+                <div id="coupon-msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const productsData = {
+            products: [
+                { name: "Myglamm Popxo Makeup Collection Mini Kit", price: 200, category: "MakeUp & Beauty", brand: "MyGlamm", image: "product1.jpg" },
+                { name: "Prplume Travel Pouch", price: 150, category: "Fashion", brand: "Prolume", image: "product2.jpg" },
+                { name: "Myglamm Lit Liquid Matte Litstick", price: 80, category: "MakeUp & Beauty", brand: "MyGlamm", image: "product3.jpg" },
+                { name: "Imagimake Mapology World", price: 300, category: "Toys", brand: "Imagimake", image: "product4.jpg" },
+                { name: "Prolume Elastic Hair Rubber Bands", price: 100, category: "Hair Accessories", brand: "Prolume", image: "product5.jpg" },
+                { name: "Pedigree Puppy Dry Dog Food", price: 600, category: "Pet Supplies", brand: "Pedigree", image: "product6.jpg" }
+            ]
+        };
+
+        let allCoupons = [];
+        let applicableCoupons = [];
+
+        let cart = [];
+        let updatedCart = null;
+        let appliedCoupon = null;
+        let totalAmount = 0;
+        let discountAmount = 0;
+        let grandTotal = 0;
+
+        async function fetchCoupons() {
+            try {
+                let body = {
+                    environment: "staging",
+                    params: {
+                        "cart" : {
+                            userId : 121,
+                            email : "alice@gmail.com",
+                            cart_list :  cart
+                        }
+                    }
+                }
+
+                const response = await fetch('____API link here____', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                console.log("body", body);
+                console.log("cart:", cart);
+                const data = await response.json();
+                console.log("api res", data);
+                if (data && data.data && data.data.output) {
+                    allCoupons = data.data.output.All_Coupons;
+                    applicableCoupons = data.data.output.Applicable_Coupons;
+                    console.log("allCoupons",allCoupons);
+                    console.log("applicableCoupons",applicableCoupons);
+                }
+                suggestCoupon();
+            } catch (error) {
+                console.error('Error fetching coupons:', error);
+            }
+        }
+
+        function loadProducts() {
+            const productsDiv = document.getElementById('products');
+            productsData.products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.dataset.price = product.price;
+                productDiv.dataset.category = product.category;
+                productDiv.dataset.brand = product.brand;
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Price: ₹${product.price.toFixed(2)}</p>
+                    <button onclick="addToCart(this)">Add to Cart</button>
+                `;
+                productsDiv.appendChild(productDiv);
+            });
+        }
+
+        function addToCart(button) {
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            const product = button.parentElement;
+            const price = parseFloat(product.dataset.price);
+            const category = product.dataset.category;
+            const brand = product.dataset.brand;
+            const productName = product.querySelector('h3').innerText;
+            const existingProduct = cart.find(item => item.name === productName);
+
+            if (existingProduct) {
+                existingProduct.quantity++;
+                existingProduct.totalPrice += price;
+            } else {
+                cart.push({ name: productName, price, quantity: 1, totalPrice: price, category, brand });
+            }
+
+            totalAmount += price;
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            totalAmount -= cart[index].totalPrice;
+            cart.splice(index, 1);
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+
+            (updatedCart || cart).forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>₹${item.price.toFixed(2)}</td>
+                    <td>
+                        <div class="quantity-controls">
+                            <button onclick="updateQuantity(${index}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>
+                        ${item.price_after_discount ? 
+                            `<span style="text-decoration: line-through;">₹${item.totalPrice.toFixed(2)}</span>
+                            <span>₹${item.price_after_discount.toFixed(2)}</span>` 
+                            : 
+                            `₹${item.totalPrice.toFixed(2)}`}
+                    </td>
+                    <td><button onclick="removeFromCart(${index})">Remove</button></td>
+                `;
+                cartItems.appendChild(row);
+            });
+
+            document.getElementById('final-total').innerText = `₹${totalAmount.toFixed(2)}`;
+            updateTotals();
+            fetchCoupons();
+        }
+
+        function updateQuantity(index, change) {
+            if (change === 1) {
+                cart[index].quantity++;
+                cart[index].totalPrice += cart[index].price;
+            } else if (change === -1 && cart[index].quantity > 1) {
+                cart[index].quantity--;
+                cart[index].totalPrice -= cart[index].price;
+            }
+            totalAmount = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            updateCart();
+        }
+
+        function updateTotals() {
+            grandTotal = totalAmount - discountAmount;
+
+            document.getElementById('coupon-discount').innerText = `-₹${discountAmount.toFixed(2)}`;
+            document.getElementById('grand-total').innerText = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        function suggestCoupon() {
+            const couponMsg = document.getElementById('coupon-msg');
+            couponMsg.innerHTML = '';
+
+            if (applicableCoupons.length > 0) {
+                applicableCoupons.forEach(coupon => {
+                    const couponDiv = document.createElement('div');
+                    couponDiv.classList.add('coupon-info');
+                    couponDiv.innerHTML = `${coupon.code} <button class="apply-coupon-button" onclick="applyCoupon('${coupon.code}')">Apply</button> <br> ${coupon.main} <br> ${coupon.description} <br> ${coupon.meta.terms}`;
+                    couponMsg.appendChild(couponDiv);
+                });
+            } else {
+                const noCouponText = document.createElement('div');
+                noCouponText.innerText = "No applicable coupons available.";
+                couponMsg.appendChild(noCouponText);
+            }
+
+            // Show remaining coupons from allCoupons
+            const remainingCoupons = allCoupons.filter(coupon => !applicableCoupons.some(applicable => applicable.code === coupon.code));
+            if (remainingCoupons.length > 0) {
+                const remainingHeader = document.createElement('div');
+                
+                remainingCoupons.forEach(coupon => {
+                    const couponDiv = document.createElement('div');
+                    couponDiv.classList.add('coupon-info');
+                    couponDiv.classList.add('coupon-info-remaining');
+                    couponDiv.innerHTML = `${coupon.code} <button class="apply-coupon-button" disabled onclick="applyCoupon('${coupon.code}')">Apply</button> <br> ${coupon.main} <br> ${coupon.description} <br> ${coupon.meta.terms}`;
+                    couponMsg.appendChild(couponDiv);
+                });
+            }
+        }
+
+        function applyCoupon(couponCode) {
+            const couponInput = document.getElementById('coupon-input');
+            if (!couponCode) {
+                couponCode = couponInput.value.trim();
+            }
+
+            appliedCoupon = applicableCoupons.find(coupon => coupon.code === couponCode);
+
+            if (!appliedCoupon) {
+                document.getElementById('coupon-error').textContent = "Invalid coupon code";
+                return;
+            }
+
+            document.getElementById('coupon-error').textContent = "";
+
+            // Clear input and message
+            couponInput.value = '';
+            document.getElementById('coupon-msg').textContent = '';
+
+            // Display applied coupon
+            document.getElementById('applied-coupon').innerText = `Applied Coupon: ${appliedCoupon.code} - ${appliedCoupon.description}`;
+
+            // Disable apply coupon button and input
+            const applyCouponButton = document.getElementById('apply-coupon-btn');
+            applyCouponButton.disabled = true;
+            couponInput.disabled = true;
+
+            // Disable all apply buttons
+            const checkButtons = setInterval(() => {
+                const applyCouponButtons = document.querySelectorAll('.apply-coupon-button');
+                if (applyCouponButtons.length > 0) {
+                    applyCouponButtons.forEach(btn => btn.disabled = true);
+                    clearInterval(checkButtons);
+                }
+            }, 100); // Check every 100ms
+
+            // Add option to remove applied coupon
+            const removeCouponButton = document.createElement('button');
+            removeCouponButton.setAttribute("id", "remove-coupon");
+            removeCouponButton.textContent = 'Remove Coupon';
+            removeCouponButton.onclick = function () {
+                removeCoupon(appliedCoupon);
+            };
+            document.getElementById('applied-coupon').after(removeCouponButton);
+
+            const currentDate = new Date();
+            const validityStart = new Date(appliedCoupon.meta.validity_start);
+            const validityEnd = new Date(appliedCoupon.meta.validity_end);
+
+            if (currentDate < validityStart || currentDate > validityEnd) {
+                throw new Error("Coupon is not valid at this time");
+            }
+
+            let discount = 0;
+            let cashback = 0;
+            updatedCart = [...cart];
+            const originalTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+            if (appliedCoupon.discount_type === "cashback") {
+                cashback = appliedCoupon.discount_value;
+            } else if (appliedCoupon.meta.discount_on === "overall" && originalTotal >= appliedCoupon.meta.min_transaction) {
+                discount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : originalTotal * (appliedCoupon.discount_value / 100);
+                discount = Math.min(discount, appliedCoupon.meta.max_discount || discount);
+            } else if (appliedCoupon.meta.discount_on === "brand") {
+                let brandTotal = 0;
+                updatedCart.forEach(item => {
+                    if (item.brand === appliedCoupon.meta.discount_on_name) {
+                        brandTotal += item.totalPrice;
+                    }
+                });
+
+                if (brandTotal >= appliedCoupon.meta.min_transaction) {
+                    updatedCart = updatedCart.map(item => {
+                        if (item.brand === appliedCoupon.meta.discount_on_name) {
+                            let itemDiscount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : item.totalPrice * (appliedCoupon.discount_value / 100);
+                            itemDiscount = Math.min(itemDiscount, appliedCoupon.meta.max_discount || itemDiscount);
+                            discount += itemDiscount;
+                            return { ...item, discount: itemDiscount, price_after_discount: item.totalPrice - itemDiscount };
+                        }
+                        return item;
+                    });
+                }
+            } else if (appliedCoupon.meta.discount_on === "category") {
+                let categoryTotal = 0;
+                updatedCart.forEach(item => {
+                    if (item.category === appliedCoupon.meta.discount_on_name) {
+                        categoryTotal += item.totalPrice;
+                    }
+                });
+
+                if (categoryTotal >= appliedCoupon.meta.min_transaction) {
+                    updatedCart = updatedCart.map(item => {
+                        if (item.category === appliedCoupon.meta.discount_on_name) {
+                            let itemDiscount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : item.totalPrice * (appliedCoupon.discount_value / 100);
+                            itemDiscount = Math.min(itemDiscount, appliedCoupon.meta.max_discount || itemDiscount);
+                            discount += itemDiscount;
+                            return { ...item, discount: itemDiscount, price_after_discount: item.totalPrice - itemDiscount };
+                        }
+                        return item;
+                    });
+                }
+            }
+
+            const totalAfterDiscount = originalTotal - discount;
+            const paymentGateway = appliedCoupon.payment_gateway;
+
+            /*console.log({
+                updatedCart,
+                originalTotal,
+                totalAfterDiscount,
+                discount,
+                cashback,
+                paymentGateway
+            });*/
+
+            //cart = updatedCart;
+            totalAmount = originalTotal;
+            discountAmount = discount;
+            grandTotal = totalAfterDiscount;
+
+            console.log({
+                updatedCart,
+                totalAmount,
+                grandTotal,
+                discountAmount,
+                cashback,
+                paymentGateway
+            });
+
+            // Update totals and cart display
+            updateTotals();
+            updateCart();
+        }
+
+        /*function applyCoupon(couponCode) {
+            const couponInput = document.getElementById('coupon-input');
+            if (!couponCode) {
+                couponCode = couponInput.value.trim();
+            }
+
+            appliedCoupon = applicableCoupons.find(coupon => coupon.code === couponCode);
+
+            if (!appliedCoupon) {
+                document.getElementById('coupon-error').textContent = "Invalid coupon code";
+                return;
+            }
+
+            document.getElementById('coupon-error').textContent = "";
+
+            // Clear input and message
+            couponInput.value = '';
+            document.getElementById('coupon-msg').textContent = '';
+
+            // Display applied coupon
+            document.getElementById('applied-coupon').innerText = `Applied Coupon: ${appliedCoupon.code} - ${appliedCoupon.description}`;
+
+            // Disable apply coupon button and input
+            const applyCouponButton = document.getElementById('apply-coupon-btn');
+            applyCouponButton.disabled = true;
+            couponInput.disabled = true;
+
+            // Disable all apply buttons
+            const checkButtons = setInterval(() => {
+                const applyCouponButtons = document.querySelectorAll('.apply-coupon-button');
+                if (applyCouponButtons.length > 0) {
+                    applyCouponButtons.forEach(btn => btn.disabled = true);
+                    clearInterval(checkButtons);
+                }
+            }, 100); // Check every 100ms
+
+            // Add option to remove applied coupon
+            const removeCouponButton = document.createElement('button');
+            removeCouponButton.setAttribute("id", "remove-coupon");
+            removeCouponButton.textContent = 'Remove Coupon';
+            removeCouponButton.onclick = function () {
+                removeCoupon(appliedCoupon);
+            };
+            document.getElementById('applied-coupon').after(removeCouponButton);
+
+            // Update totals and cart display
+            updateTotals();
+            updateCart();
+        }*/
+
+        function removeCoupon() {
+            // Remove applied coupon
+            appliedCoupon = null;
+
+            // Revert cart and totals to the state before applying the coupon
+            updatedCart = null;
+            totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            discountAmount = 0;
+            grandTotal = totalAmount;
+
+
+            // Reset discount amounts
+            const couponDiscountElement = document.getElementById('coupon-discount');
+            const grandTotalElement = document.getElementById('grand-total');
+
+            couponDiscountElement.textContent = `-₹0.00`;
+            grandTotalElement.textContent = `₹${totalAmount.toFixed(2)}`;
+
+            // Re-enable apply coupon button and input
+            const applyCouponButton = document.getElementById('apply-coupon-btn');
+            applyCouponButton.disabled = false;
+            document.getElementById('coupon-input').disabled = false;
+
+            // Remove applied coupon display
+            const appliedCouponElement = document.getElementById('applied-coupon');
+            appliedCouponElement.textContent = '';
+
+            // Remove remove-coupon button
+            const removeCouponButton = document.querySelector('#remove-coupon');
+            if (removeCouponButton) {
+                removeCouponButton.remove();
+            }
+
+            // Update totals and cart display
+            updateTotals();
+            updateCart();
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+
+</html>

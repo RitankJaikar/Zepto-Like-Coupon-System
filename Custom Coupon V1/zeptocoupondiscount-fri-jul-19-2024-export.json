@@ -1,0 +1,610 @@
+{
+  "entity": "rule",
+  "rootId": "669a1003062bab480db53ace",
+  "ref": {
+    "669a1003062bab480db53ace": {
+      "entity": "rule",
+      "category": "decisionTable",
+      "name": "Zepto_Coupon_Discount",
+      "data": {
+        "name": "Zepto_Coupon_Discount",
+        "customInput": {
+          "types": {
+            "name": "types",
+            "dataType": "list",
+            "executedValue": [
+              "fashion",
+              "pet_supplies",
+              "beverage",
+              "electronics",
+              "grocery"
+            ],
+            "next": "brands",
+            "previous": "cartValue"
+          },
+          "brands": {
+            "name": "brands",
+            "dataType": "list",
+            "executedValue": [
+              "brandA",
+              "brandB",
+              "brandC",
+              "brandD"
+            ],
+            "previous": "types"
+          },
+          "cartValue": {
+            "name": "cartValue",
+            "dataType": "numeric",
+            "executedValue": 100,
+            "next": "types"
+          }
+        },
+        "decisionTable": {
+          "rows": {
+            "rule_ly4bv96vzdhubxaltrr": {
+              "nextId": "rule_ly4bya7ksqxpaf86fjb",
+              "prevId": "rule_ly4brxe2lmq77blxzu",
+              "firstOutputData": "output_ly4bv96wkgbqknng1eo",
+              "isEnabled": true
+            },
+            "rule_ly4bya7ksqxpaf86fjb": {
+              "nextId": "rule_ly4c1dj04eisf8ai1zo",
+              "prevId": "rule_ly4bv96vzdhubxaltrr",
+              "firstOutputData": "output_ly4bya7li1zmtbdbj7",
+              "isEnabled": true
+            },
+            "rule_ly4c1dj04eisf8ai1zo": {
+              "prevId": "rule_ly4bya7ksqxpaf86fjb",
+              "firstOutputData": "output_ly4c1dj18jvunesuyla",
+              "isEnabled": true
+            },
+            "rule_01": {
+              "nextId": "rule_ly4blqr65t79541l1j4",
+              "firstOutputData": "output_ly4bh149i5rarr327fc",
+              "isEnabled": true
+            },
+            "rule_ly4blqr65t79541l1j4": {
+              "nextId": "rule_ly4brxe2lmq77blxzu",
+              "prevId": "rule_01",
+              "firstOutputData": "output_ly4blqr7mt4vt1m6yx",
+              "isEnabled": true
+            },
+            "rule_ly4brxe2lmq77blxzu": {
+              "nextId": "rule_ly4bv96vzdhubxaltrr",
+              "prevId": "rule_ly4blqr65t79541l1j4",
+              "firstOutputData": "output_ly4brxe3gf6979cen6",
+              "isEnabled": true
+            }
+          },
+          "properties": {
+            "rule_03": {
+              "nextId": "rule_ly4bbehdqif2m66f01",
+              "type": "simpleCondition"
+            },
+            "rule_ly4bbehdqif2m66f01": {
+              "nextId": "rule_ly4bbhbjyaddldzig6",
+              "prevId": "rule_03",
+              "type": "simpleCondition"
+            },
+            "rule_ly4bbhbjyaddldzig6": {
+              "prevId": "rule_ly4bbehdqif2m66f01",
+              "type": "simpleCondition"
+            }
+          },
+          "results": {
+            "result_ly4bh140k21y06admhc": {
+              "dataType": "json",
+              "keyName": "coupon"
+            }
+          },
+          "firstRow": "rule_01",
+          "firstProperty": "rule_03",
+          "firstResult": "result_ly4bh140k21y06admhc"
+        },
+        "action": {
+          "then": {
+            "outputData": {
+              "output_ly4blqr7mt4vt1m6yx": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n    \"code\": \"SAVE10\",\n    \"description\": \"10% off on orders above $100\",\n    \"discount\": {\n        \"type\": \"percentage\",\n        \"value\": 10\n    }\n}",
+                "executedValue": {
+                  "discount": {
+                    "value": 10,
+                    "type": "percentage"
+                  },
+                  "code": "SAVE10",
+                  "description": "10% off on orders above $100"
+                }
+              },
+              "output_ly4brxe3gf6979cen6": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n    \"code\": \"BRANDA20\",\n    \"description\": \"20% off on Brand A products\",\n    \"discount\": {\n        \"type\": \"fixed\",\n        \"value\": 20\n    }\n}",
+                "executedValue": {
+                  "discount": {
+                    "type": "fixed",
+                    "value": 20
+                  },
+                  "code": "BRANDA20",
+                  "description": "20% off on Brand A products"
+                }
+              },
+              "output_ly4bv96wkgbqknng1eo": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n    \"code\": \"ELECTRO15\",\n    \"description\": \"15% off on Electronics\",\n    \"discount\": {\n        \"type\": \"percentage\",\n        \"value\": 15\n    }\n}",
+                "executedValue": {
+                  "discount": {
+                    "type": "percentage",
+                    "value": 15
+                  },
+                  "code": "ELECTRO15",
+                  "description": "15% off on Electronics"
+                }
+              },
+              "output_ly4bya7li1zmtbdbj7": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n    \"code\": \"GROCERY5\",\n    \"description\": \"$5 off on Grocery orders above $30\",\n    \"discount\": {\n        \"type\": \"fixed\",\n        \"value\": 5\n    }\n}",
+                "executedValue": {
+                  "code": "GROCERY5",
+                  "description": "$5 off on Grocery orders above $30",
+                  "discount": {
+                    "type": "fixed",
+                    "value": 5
+                  }
+                }
+              },
+              "output_ly4c1dj18jvunesuyla": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n    \"code\": \"FASHION10\",\n    \"description\": \"10% off on Fashion products\",\n    \"discount\": {\n        \"type\": \"percentage\",\n        \"value\": 10\n    }\n}",
+                "executedValue": {
+                  "description": "10% off on Fashion products",
+                  "discount": {
+                    "value": 10,
+                    "type": "percentage"
+                  },
+                  "code": "FASHION10"
+                }
+              },
+              "output_ly4bh149i5rarr327fc": {
+                "name": "coupon",
+                "dataType": "json",
+                "value": "{\n  \"code\": \"SAVE5\",\n  \"description\": \"5% off on orders above $50\",\n  \"discount\": {\n    \"type\": \"percentage\",\n    \"value\": 5\n  }\n}",
+                "executedValue": {
+                  "description": "5% off on orders above $50",
+                  "discount": {
+                    "value": 5,
+                    "type": "percentage"
+                  },
+                  "code": "SAVE5"
+                }
+              }
+            }
+          },
+          "else": {}
+        },
+        "conditions": {
+          "nodes": {
+            "rule_ly4c1dj1ii893l0azjd": {
+              "value": "",
+              "operator": "contains",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4c1dj04eisf8ai1zo",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "rightNode": [
+                "rule_ly4c1dj1w3wkv0v67m9"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4brxe2lmq77blxzu": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_ly4brxe2re9jxe8jl5",
+                "rule_ly4brxe32gp200epcxj",
+                "rule_ly4brxe370tilcvzck9"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bbhbkkqezqdpssj": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_01",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7lysbbrzwvt": {
+              "value": [
+                "grocery"
+              ],
+              "dataType": "list",
+              "nodeType": "constant",
+              "parent": "rule_ly4bya7lstt32oe1xo",
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7k2dpurzjrwvn": {
+              "value": 30,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_ly4bya7kqet16b33vzm",
+              "siblingIndex": 1
+            },
+            "rule_ly4bv96vxoojt50kjyg": {
+              "value": "",
+              "operator": "contains",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4bv96vzdhubxaltrr",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "rightNode": [
+                "rule_ly4by6qvom4tb0oujsk"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_01": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_02",
+                "rule_ly4bbehdyb87vo0om6q",
+                "rule_ly4bbhbkkqezqdpssj"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4blqr6poii3eucsxh": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_ly4blqr65t79541l1j4",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4blqr6q0fkfuwsf8i"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4brxe32gp200epcxj": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4brxe2lmq77blxzu",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4blqr65t79541l1j4": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_ly4blqr6poii3eucsxh",
+                "rule_ly4blqr77ihbte11p1e",
+                "rule_ly4blqr7748ni3yf83y"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4blqr77ihbte11p1e": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4blqr65t79541l1j4",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7lxswn59nal6b": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4bya7ksqxpaf86fjb",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4c1dj04eisf8ai1zo": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_ly4c1dj0l5xcf4quan",
+                "rule_ly4c1dj1ii893l0azjd",
+                "rule_ly4c1dj1tcmouleb47q"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bbehdqif2m66f01": {
+              "sourceType": "customInput",
+              "dataType": "list",
+              "nodeType": "params",
+              "attribute": "types",
+              "siblingIndex": 1
+            },
+            "rule_ly4blqr7748ni3yf83y": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4blqr65t79541l1j4",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4blqr6q0fkfuwsf8i": {
+              "value": 100,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_ly4blqr6poii3eucsxh",
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7kqet16b33vzm": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_ly4bya7ksqxpaf86fjb",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4bya7k2dpurzjrwvn"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bv96vn0hd2ydyank": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4bv96vzdhubxaltrr",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bbehdyb87vo0om6q": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_01",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4by6qvom4tb0oujsk": {
+              "value": [
+                "electronics"
+              ],
+              "dataType": "list",
+              "nodeType": "constant",
+              "parent": "rule_ly4bv96vxoojt50kjyg",
+              "siblingIndex": 1
+            },
+            "rule_ly4c1dj1tcmouleb47q": {
+              "value": "",
+              "operator": "any",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4c1dj04eisf8ai1zo",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bv96v1j2p297teqx": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_ly4bv96vzdhubxaltrr",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4bv96v3ethidc036k"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7lstt32oe1xo": {
+              "value": "",
+              "operator": "contains",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4bya7ksqxpaf86fjb",
+              "leftNode": [
+                "rule_ly4bbehdqif2m66f01"
+              ],
+              "rightNode": [
+                "rule_ly4bya7lysbbrzwvt"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4c1dj0bfx6oqdhxb": {
+              "value": 200,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_ly4c1dj0l5xcf4quan",
+              "siblingIndex": 1
+            },
+            "rule_ly4bg8tnl0yq14kathq": {
+              "value": 50,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_02",
+              "siblingIndex": 1
+            },
+            "rule_ly4brxe2re9jxe8jl5": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_ly4brxe2lmq77blxzu",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4brxe22kkrz9y97lv"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bv96vzdhubxaltrr": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_ly4bv96v1j2p297teqx",
+                "rule_ly4bv96vxoojt50kjyg",
+                "rule_ly4bv96vn0hd2ydyank"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_02": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_01",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4bg8tnl0yq14kathq"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4brxe22kkrz9y97lv": {
+              "value": 100,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_ly4brxe2re9jxe8jl5",
+              "siblingIndex": 1
+            },
+            "rule_03": {
+              "sourceType": "customInput",
+              "dataType": "numeric",
+              "nodeType": "params",
+              "attribute": "cartValue",
+              "siblingIndex": 1
+            },
+            "rule_ly4bbhbjyaddldzig6": {
+              "sourceType": "customInput",
+              "dataType": "list",
+              "nodeType": "params",
+              "attribute": "brands",
+              "siblingIndex": 1
+            },
+            "rule_ly4bya7ksqxpaf86fjb": {
+              "operator": "and",
+              "nodeType": "group",
+              "children": [
+                "rule_ly4bya7kqet16b33vzm",
+                "rule_ly4bya7lstt32oe1xo",
+                "rule_ly4bya7lxswn59nal6b"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4c1dj0l5xcf4quan": {
+              "value": "",
+              "operator": "gte",
+              "dataType": "numeric",
+              "nodeType": "condition",
+              "parent": "rule_ly4c1dj04eisf8ai1zo",
+              "leftNode": [
+                "rule_03"
+              ],
+              "rightNode": [
+                "rule_ly4c1dj0bfx6oqdhxb"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4c1dj1w3wkv0v67m9": {
+              "value": [
+                "fashion"
+              ],
+              "dataType": "list",
+              "nodeType": "constant",
+              "parent": "rule_ly4c1dj1ii893l0azjd",
+              "siblingIndex": 1
+            },
+            "rule_ly4brxe370tilcvzck9": {
+              "value": "",
+              "operator": "contains",
+              "dataType": "list",
+              "nodeType": "condition",
+              "parent": "rule_ly4brxe2lmq77blxzu",
+              "leftNode": [
+                "rule_ly4bbhbjyaddldzig6"
+              ],
+              "rightNode": [
+                "rule_ly4bucvh0qmhdwwgc0o"
+              ],
+              "siblingIndex": 1
+            },
+            "rule_ly4bv96v3ethidc036k": {
+              "value": 150,
+              "dataType": "numeric",
+              "nodeType": "constant",
+              "parent": "rule_ly4bv96v1j2p297teqx",
+              "siblingIndex": 1
+            },
+            "rule_ly4bucvh0qmhdwwgc0o": {
+              "value": [
+                "brandA"
+              ],
+              "dataType": "list",
+              "nodeType": "constant",
+              "parent": "rule_ly4brxe370tilcvzck9",
+              "siblingIndex": 1
+            }
+          }
+        },
+        "firstCustomInput": "cartValue",
+        "policy": "order",
+        "type": "decisionTable",
+        "dataSetId": "000000000000000000000000",
+        "staging": {
+          "startAt": "0001-01-01T00:00:00Z",
+          "endAt": "0001-01-01T00:00:00Z",
+          "api": {
+            "startAt": "0001-01-01T00:00:00Z",
+            "endAt": "0001-01-01T00:00:00Z",
+            "isEnabled": true
+          },
+          "isEnabled": true
+        },
+        "production": {
+          "startAt": "0001-01-01T00:00:00Z",
+          "endAt": "0001-01-01T00:00:00Z",
+          "api": {
+            "startAt": "0001-01-01T00:00:00Z",
+            "endAt": "0001-01-01T00:00:00Z",
+            "isEnabled": true
+          },
+          "isEnabled": true
+        },
+        "SchemaVersion": "0.1.1"
+      }
+    }
+  },
+  "timestamp": "2024-07-19T07:04:35.343638517Z"
+}

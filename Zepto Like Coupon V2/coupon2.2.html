@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Zepto Coupon System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+
+        .full-body {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .zepto-container {
+            display: flex;
+            overflow: auto;
+            width: 500px;
+            height: 740px;
+            flex-flow: column;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgb(222, 226, 230);
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
+            background-color: #F7EDF8;
+        }
+
+        img {
+            display: inline-block;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        #products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 0px;
+            justify-items: center;
+            padding: 0px 10px;
+            background-color: white;
+        }
+
+        .product {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: left;
+            transition: transform 0.3s;
+            width: 100%;
+            /* Ensure full width for grid item */
+            box-sizing: border-box;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            /* Ensure square images */
+            object-fit: cover;
+            /* Cover the container while maintaining aspect ratio */
+            border-radius: 10px;
+        }
+
+        .product h3 {
+            font-size: 18px;
+            color: #333333;
+            margin: 2px 0 6px;
+            height: 54px;
+            /* Fixed height for consistent layout, adjusted for two lines */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* Show up to 2 lines */
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product p {
+            font-size: 18px;
+            color: #777777;
+            margin: 0 0 6px;
+        }
+
+        .product button {
+            width: 100%;
+            color: #FF326A;
+            font-weight: 700;
+            background-color: white;
+            border: 1px solid #FF326A;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .product button:hover {
+            background-color: #FF326A;
+            color: white;
+        }
+
+        .product:hover {
+            transform: scale3d(.98, .98, .01);
+        }
+
+        #cart {
+            background: #ffffff;
+            padding: 12px 16px;
+        }
+
+        #cart h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+
+
+
+        #cart table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #cart th,
+        #cart td {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #total {
+            margin-top: 12px;
+            background-color: white;
+            padding: 12px 16px;
+        }
+
+        #total div {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        #total div:last-child {
+            font-size: 18px;
+        }
+
+        .coupon-wrapper {
+            margin-top: 12px;
+            margin-bottom: 12px;
+            background-color: white;
+        }
+
+        .coupon-header {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .coupon-header .left-side {
+            display: flex;
+            align-items: center;
+        }
+
+        .coupon-header .left-side img {
+            margin-right: 10px;
+            height: 30px;
+            width: 30px;
+            aspect-ratio: auto 1 / 1;
+        }
+
+        .coupon-header .icon {
+            transition: transform 0.3s ease;
+            color: #FF326A;
+            padding-top: 4px;
+            padding-right: 4px;
+        }
+
+        .coupon-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .coupon-content.show {
+            max-height: 2000px;
+            padding: 12px 16px;
+            opacity: 1;
+        }
+
+        #coupon h2{
+            margin: 0px;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+        
+        .coupon-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #coupon-input {
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+
+        #coupon-input:disabled {
+            background-color: #cccccc22;
+            cursor: not-allowed;
+        }
+
+        #apply-coupon-btn {
+            color: #FF326A;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            width: 58px;
+            height: auto;
+            font-weight: 600;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        #apply-coupon-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #coupon-error {
+            color: red;
+            margin-top: 5px;
+        }
+
+        #applied-coupon {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .coupon-info {
+            font-size: 1rem;
+            color: green;
+            margin-bottom: 20px;
+        }
+
+        .coupon-info-remaining {
+            color: grey;
+        }
+
+        .coupon-card {
+            border: 1px solid #e0e0e0;
+            margin: 10px 0;
+            padding: 15px;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .coupon-code {
+            display: inline-block;
+            border: 2px dashed #A64FD4;
+            color: #A64FD4;
+            background-color: #F0D7F7;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            line-height: 22px;
+        }
+
+        .coupon-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .view-details {
+            color: #ff69b4;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .coupon-details {
+            color: #666;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .more-info, .view-less {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .apply-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #FF326A;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            width: 58px;
+            height: auto;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .terms-conditions {
+            margin-top: 10px;
+        }
+
+        .terms-conditions h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .terms-conditions ul {
+            padding-left: 20px;
+            margin: 0 0 10px 0;
+        }
+
+        .terms-conditions li {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .coupon-card-remaining {
+            opacity: 0.6;
+            background-color: #f0f0f0;
+        }
+
+        .applied-coupon-card {
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #E8F5E9;
+        }
+
+        .applied-coupon-card .coupon-code {
+            display: inline-block;
+            border: 2px dashed #4CAF50;
+            color: #4CAF50;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+        }
+
+        .applied-coupon-card h3 {
+            color: #2E7D32;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .applied-coupon-card p {
+            color: #1B5E20;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        #remove-coupon {
+            color: #FF326A;
+            background-color: transparent;
+            cursor: pointer;
+            width: 130px;
+            height: auto;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        .quantity-controls {
+            background-color: #ff326a;
+            border-radius: 5px;
+            justify-content: space-between;
+            align-items: center;
+            display: flex;
+            width: 100%;
+            border: 1px solid #ff326a;
+        }
+
+        .quantity-controls button {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0);
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .quantity-controls .quantity {
+            color: #fff;
+        }
+
+        .inside-cart {
+            width: 100%;
+        }  
+        .cart-item {
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            padding: 4px 0;
+            display: flex;
+        } 
+        .cart-image {
+            width: 54px;
+            height: 54px;
+            margin-right: 6px; display: inline-block;
+        } 
+        .cart-text {
+            width: 250px;
+            font-size: 16px;
+        } 
+        .update-quantity {
+            background-color: #ff326a;
+            border-radius: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-left: 6px;
+            display: flex;
+            width: 62px;
+        } 
+        .update-quantity-button {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0);
+            padding: 6px 10px;
+            border: none;
+            cursor: pointer;
+        } 
+        .quantity {
+            color: #fff;
+        } 
+        .total-price {
+            justify-content: center;
+            align-items: center;
+            margin-left: 16px;
+            display: flex;
+            width: 60px;
+            font-size: 16px;
+            flex-direction: column-reverse;
+        }
+
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        .zepto-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .zepto-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .zepto-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .zepto-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Firefox */
+        .zepto-container {
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
+        }
+
+        #scrollToCartButton {
+            background-color: #FF326A;
+            color: white;
+            font-weight: 700;
+            border: 1px solid #FF326A;
+            padding: 10px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #scrollToCartButton:hover {
+            transform: translateX(-50%) scale3d(.96, .96, .01) !important;
+        }
+
+        #payment-button {
+            background-color: #FF326A;
+            color: white;
+            font-weight: 600;
+            border: 1px solid #FF326A;
+            padding: 10px 80px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            height: 50px;
+        }
+
+        #payment-button:hover {
+            transform: scale3d(.96, .96, .01) !important;
+        }
+
+        @media screen and (max-width: 767px) {
+            .zepto-container {
+                width: 100%;
+                height: 100%;
+                border-width: 0px;
+                border-radius: 0px;
+                box-shadow: none;
+            }
+
+            .product h3 {
+                font-size: 13px;
+                margin: 2px 0 6px;
+                height: 38px;
+                /* Fixed height for consistent layout, adjusted for two lines */
+            }
+
+            .product p, .total-price, .cart-text {
+                font-size: 13px;
+            }
+
+            .cart-text {
+                width: 150px;
+            }
+
+            #payment-button {
+                padding: 10px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="full-body">
+        <div class="zepto-container">
+            <div style="position: relative; margin-bottom: -11px;">
+                <img id="img1" src="https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/66960a3581b0ca12e8cd2a69_Screenshot_2022-11-18-14-25-40-83.svg"
+                    alt="" style="margin-bottom: -12px;">
+                <div id="products"></div>
+                <img id="img2" src="https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/66960aeb2ba645447f53a2e6_Screenshot_2022-11-18-14-25-40-83%20(1).svg"
+                    alt="" style="object-fit: cover; clip-path: inset(0 0 2px 0); margin: 12px 0; margin-bottom: -44px;">
+                <button id="scrollToCartButton" style="position: sticky; bottom: 16px; left: 50%; transform: translateX(-50%); margin-bottom: 20px;">Cart &nbsp;<i class="fa-solid fa-angle-down"></i></button>
+            </div>
+
+            <div style="position: relative;">
+                <div id="cart" class="cart">
+                    <h2>Shopping Cart</h2>
+
+                    <div class="inside-cart" id="inside-cart">
+                        No items in cart yet!
+                        <!-- Cart items will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <div id="total">
+                    <div>Item(s) Total <span id="final-total">₹0.00</span></div>
+                    <div><span id="coupon-discount-text">Coupon Discount</span><span id="coupon-discount" style="color: #FF326A;">-₹0.00</span></div>
+                    <div class="line" style="height: 0.08px; background: #eaeaea;"></div>
+                    <div>To Pay: <b><span id="grand-total">₹0.00</span></b></div>
+                </div>
+
+                <div class="coupon-wrapper">
+                    <div class="coupon-header" onclick="toggleCoupons()">
+                        <div class="left-side">
+                            <img src="https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/6697fb9db2836ecf5eced957_Screenshot_2022-11-18-14-42-59-34.svg">
+                            <span>Avail Offers/Coupons</span>
+                        </div>
+                        <span class="icon"><i class="fa-solid fa-caret-right" style="color: #ff326a;font-size: 18px;"></i></span>
+                    </div>
+                    <div id="coupon" class="coupon-content">
+                        <h2>Apply Coupon</h2>
+                        <div class="coupon-input">
+                            <input type="text" id="coupon-input" placeholder="Enter Coupon Code">
+                            <button id="apply-coupon-btn" onclick="applyCoupon()">APPLY</button>
+                        </div>
+                        <p id="coupon-error"></p>
+                        <p id="applied-coupon"></p>
+                        <div id="coupon-msg"></div>
+                    </div>
+                </div>
+
+                <div style="position: sticky; bottom: 0; background-color: white;">
+                    <img src="Assets/Screenshot_2022-11-18-14-45-23-62_d13708f0377555913763db32da1326f2.svg" alt="" style="border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-self: center; margin: -8px 0; padding: 0 22px 18px;">
+                        <div style="font-weight: 600; line-height: 17px; display: flex; flex-direction: column; justify-content: center; font-size: 15px;">
+                            <span id="payment-total">₹0</span>
+                            <span style="color: #FF326A;">View Bill</span>
+                        </div>
+                        <button id="payment-button">ADD ITEM(S) IN CART</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const productsData = {
+            products: [
+                { name: "Myglamm Popxo Makeup Collection Mini Kit", price: 200, category: "MakeUp & Beauty", brand: "MyGlamm", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e3e4f409a7f6a573ba_image%2011.svg" },
+                { name: "Prolume Travel Pouch Essential Kit Bag", price: 150, category: "Fashion", brand: "Prolume", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e27a9bb2bbfb40335d_image%2012.svg" },
+                { name: "Myglamm Lit Liquid Matte Litstick", price: 80, category: "MakeUp & Beauty", brand: "MyGlamm", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e3c96f24949fe0603e_image%2013.svg" },
+                { name: "Imagimake Mapology World", price: 300, category: "Toys", brand: "Imagimake", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e367141b1e784d1e05_image%2014.svg" },
+                { name: "Prolume Elastic Hair Rubber Bands", price: 100, category: "Hair Accessories", brand: "Prolume", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e19fc048fc25e982db_image%2015.png" },
+                { name: "Pedigree Puppy Dry Dog Food", price: 600, category: "Pet Supplies", brand: "Pedigree", image: "https://uploads-ssl.webflow.com/62e2573721100dc3e2dd0974/669759e3868f313a40730810_image%2016.png" }
+            ]
+        };
+
+        let allCoupons = [];
+        let applicableCoupons = [];
+
+        let cart = [];
+        let updatedCart = null;
+        let appliedCoupon = null;
+        let totalAmount = 0;
+        let discountAmount = 0;
+        let grandTotal = 0;
+
+        document.getElementById('scrollToCartButton').addEventListener('click', function() {
+            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+        });
+        const observerOptions = {
+            root: null, // Use the viewport as the root
+            rootMargin: '0px',
+            threshold: 1.0 // 1.0 means the target is fully visible
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.getElementById('scrollToCartButton').style.display = 'none';
+                    document.getElementById('img2').style.marginBottom = '12px';
+                } else {
+                    document.getElementById('scrollToCartButton').style.display = 'block';
+                    document.getElementById('img2').style.marginBottom = '-44px';
+                }
+            });
+        }, observerOptions);
+        observer.observe(document.getElementById('cart'));
+
+        function toggleCoupons() {
+            const couponContent = document.getElementById('coupon');
+            const icon = document.querySelector('.coupon-header .icon');
+
+            couponContent.classList.toggle('show');
+
+            if (couponContent.classList.contains('show')) {
+                icon.style.transform = 'rotate(90deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        async function fetchCoupons() {
+            try {
+                let body = {
+                    environment: "staging",
+                    params: {
+                        "cart": {
+                            userId: 121,
+                            email: "alice@gmail.com",
+                            cart_list: cart
+                        }
+                    }
+                }
+
+                const response = await fetch('____API link here____', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                console.log("body", body);
+                console.log("cart:", cart);
+                const data = await response.json();
+                console.log("api res", data);
+                if (data && data.data && data.data.output) {
+                    allCoupons = data.data.output.All_Coupons;
+                    applicableCoupons = data.data.output.Applicable_Coupons;
+                    console.log("allCoupons", allCoupons);
+                    console.log("applicableCoupons", applicableCoupons);
+                }
+                suggestCoupon();
+            } catch (error) {
+                console.error('Error fetching coupons:', error);
+            }
+        }
+
+        function loadProducts() {
+            const productsDiv = document.getElementById('products');
+            productsData.products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.dataset.price = product.price;
+                productDiv.dataset.category = product.category;
+                productDiv.dataset.brand = product.brand;
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>₹${product.price.toFixed(2)}</p>
+                    <button onclick="addToCart(this)">Add to Cart</button>
+                    <div class="quantity-controls" style="display: none;">
+                        <button onclick="updateQuantityInProductList('${product.name}', -1)">-</button>
+                        <span class="quantity">0</span>
+                        <button onclick="updateQuantityInProductList('${product.name}', 1)">+</button>
+                    </div>
+                `;
+                productsDiv.appendChild(productDiv);
+            });
+            updateProductListButtons();
+        }
+
+        function addToCart(button) {
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            const product = button.parentElement;
+            const price = parseFloat(product.dataset.price);
+            const category = product.dataset.category;
+            const brand = product.dataset.brand;
+            const productName = product.querySelector('h3').innerText;
+            const existingProduct = cart.find(item => item.name === productName);
+
+            if (existingProduct) {
+                existingProduct.quantity++;
+                existingProduct.totalPrice += price;
+            } else {
+                cart.push({ name: productName, price, quantity: 1, totalPrice: price, category, brand });
+            }
+
+            totalAmount += price;
+            updateCart();
+            updateProductListButtons();
+        }
+
+        function removeFromCart(index) {
+            totalAmount -= cart[index].totalPrice;
+            cart.splice(index, 1);
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            updateCart();
+            updateProductListButtons();
+        }
+        
+        function updateCart() {
+            const insideCart = document.getElementById('inside-cart');
+            insideCart.innerHTML = '';
+
+            (updatedCart || cart).forEach((item, index) => {
+                const product = productsData.products.find(p => p.name === item.name);
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                
+                cartItem.innerHTML = `
+                    <img src="${product.image}" class="cart-image">
+                    <div class="cart-text">${item.name}</div>
+                    <div class="update-quantity">
+                        <button onclick="updateQuantity(${index}, -1)" class="update-quantity-button">-</button>
+                        <div class="quantity">${item.quantity}</div>
+                        <button onclick="updateQuantity(${index}, 1)" class="update-quantity-button">+</button>
+                    </div>
+                    <div class="total-price">
+                        ${item.price_after_discount ? 
+                            `<span style="text-decoration: line-through; color: #FF326A;">₹${item.totalPrice.toFixed(2)}</span>
+                            <span>₹${item.price_after_discount.toFixed(2)}</span>` 
+                            : 
+                            `₹${item.totalPrice.toFixed(2)}`
+                        }
+                    </div>
+                `;
+                insideCart.appendChild(cartItem);
+            });
+
+            document.getElementById('final-total').innerText = `₹${totalAmount.toFixed(2)}`;
+            updateTotals();
+            fetchCoupons();
+        }
+
+        function updateQuantity(index, change) {
+            if (change === 1) {
+                // Increase quantity
+                cart[index].quantity++;
+                cart[index].totalPrice += cart[index].price;
+            } else if (change === -1) {
+                // Decrease quantity
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity--;
+                    cart[index].totalPrice -= cart[index].price;
+                } else {
+                    // Remove item from cart if quantity is 1 and "-" is clicked
+                    removeFromCart(index);
+                    return; // Exit the function to prevent further updates
+                }
+            }
+
+            // Update total amount
+            totalAmount = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+            
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+            updateCart();
+            updateProductListButtons();
+        }
+
+        // Function to Update Quantity in Product List
+        function updateQuantityInProductList(productName, change) {
+            const productDiv = [...document.getElementsByClassName('product')].find(div => div.querySelector('h3').innerText === productName);
+            const button = productDiv.querySelector('button');
+            const quantitySpan = productDiv.querySelector('.quantity-controls .quantity');
+
+            const cartItem = cart.find(item => item.name === productName);
+            if (cartItem) {
+                cartItem.quantity += change;
+                cartItem.totalPrice += change * cartItem.price;
+                
+                if (cartItem.quantity <= 0) {
+                    cart.splice(cart.indexOf(cartItem), 1);
+                }
+            } else if (change > 0) {
+                addToCart(button);
+                return;
+            }
+
+            if (appliedCoupon) {
+                removeCoupon();
+            }
+
+            totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            updateCart();
+            updateProductListButtons();
+        }
+
+        // Function to Update Product List Buttons
+        function updateProductListButtons() {
+            productsData.products.forEach(product => {
+                updateProductButton(product.name);
+            });
+        }
+
+        // Function to Update a Single Product Button
+        function updateProductButton(productName) {
+            const productDiv = [...document.getElementsByClassName('product')].find(div => div.querySelector('h3').innerText === productName);
+            const button = productDiv.querySelector('button');
+            const quantityControls = productDiv.querySelector('.quantity-controls');
+            const quantitySpan = productDiv.querySelector('.quantity-controls .quantity');
+
+            const cartItem = cart.find(item => item.name === productName);
+
+            if (cartItem) {
+                if (cartItem.quantity > 0) {
+                    button.style.display = 'none';
+                    quantityControls.style.display = 'flex';
+                    quantitySpan.innerText = cartItem.quantity;
+                } else {
+                    button.style.display = 'block';
+                    quantityControls.style.display = 'none';
+                }
+            } else {
+                //console.log("No cartItem found"); // Debugging
+                button.style.display = 'block';
+                quantityControls.style.display = 'none';
+            }
+        }
+
+        function updateTotals() {
+            grandTotal = totalAmount - discountAmount;
+
+            document.getElementById('coupon-discount').innerText = `-₹${discountAmount.toFixed(2)}`;
+            document.getElementById('grand-total').innerText = `₹${grandTotal.toFixed(2)}`;
+            document.getElementById('payment-total').innerText = `₹${grandTotal.toFixed(2)}`;
+
+            if(grandTotal <= 0) {
+                document.getElementById("payment-button").innerText = "ADD ITEM(S) IN CART";
+            } else if (!appliedCoupon) {
+                document.getElementById("payment-button").innerText = "CONTINUE TO PAYMENT";
+            }
+        }
+
+        function suggestCoupon() {
+            const couponMsg = document.getElementById('coupon-msg');
+            couponMsg.innerHTML = '';
+
+            function createCouponCard(coupon, isApplicable) {
+                const couponDiv = document.createElement('div');
+                couponDiv.classList.add('coupon-card');
+                if (!isApplicable) {    //not applicable coupons
+                    couponDiv.classList.add('coupon-card-remaining');
+                    couponDiv.innerHTML = `
+                        <div class="coupon-code">${coupon.code}</div>
+                        <h3>${coupon.main}</h3>
+                        <p style="color:red; font-size:12px;">Add Items worth ₹${coupon.meta.min_transaction} to qualify for this deal.</p>
+                        <p class="coupon-details">${coupon.description}</p>
+                        <a href="#" class="more-info">+ MORE</a>
+                        <div class="terms-conditions" style="display: none;">
+                            <ul>
+                                ${coupon.meta.terms.split('. ').map(term => `<li>${term}</li>`).join('')}
+                            </ul>
+                            <a href="#" class="view-less">View Less</a>
+                        </div>
+                        <button class="apply-button" ${!isApplicable ? 'disabled' : ''} onclick="applyCoupon('${coupon.code}')">${isApplicable ? 'APPLY' : 'APPLY'}</button>
+                    `;
+                }
+                else {      //appicable coupons
+                    couponDiv.innerHTML = `
+                        <div class="coupon-code">${coupon.code}</div>
+                        <h3>${coupon.main}</h3>
+                        <p class="coupon-details">${coupon.description}</p>
+                        <a href="#" class="more-info">+ MORE</a>
+                        <div class="terms-conditions" style="display: none;">
+                            <ul>
+                                ${coupon.meta.terms.split('. ').map(term => `<li>${term}</li>`).join('')}
+                            </ul>
+                            <a href="#" class="view-less">View Less</a>
+                        </div>
+                        <button class="apply-button" ${!isApplicable ? 'disabled' : ''} onclick="applyCoupon('${coupon.code}')">${isApplicable ? 'APPLY' : 'APPLY'}</button>
+                    `;
+                }
+                return couponDiv;
+            }
+
+            if (applicableCoupons.length > 0) {
+                applicableCoupons.forEach(coupon => {
+                    couponMsg.appendChild(createCouponCard(coupon, true));
+                });
+            } else {
+                const noCouponText = document.createElement('div');
+                noCouponText.innerText = "No applicable coupons available.";
+                couponMsg.appendChild(noCouponText);
+            }
+
+            // Show remaining coupons from allCoupons
+            const remainingCoupons = allCoupons.filter(coupon => !applicableCoupons.some(applicable => applicable.code === coupon.code));
+            if (remainingCoupons.length > 0) {
+                remainingCoupons.forEach(coupon => {
+                    couponMsg.appendChild(createCouponCard(coupon, false));
+                });
+            }
+
+            // Add event listeners for MORE and View Less links
+            const moreInfoLinks = document.querySelectorAll('.more-info');
+            const viewLessLinks = document.querySelectorAll('.view-less');
+
+            moreInfoLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const termsConditions = this.nextElementSibling;
+                    termsConditions.style.display = 'block';
+                    this.style.display = 'none';
+                });
+            });
+
+            viewLessLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const termsConditions = this.closest('.terms-conditions');
+                    termsConditions.style.display = 'none';
+                    termsConditions.previousElementSibling.style.display = 'inline';
+                });
+            });
+        }
+
+        function applyCoupon(couponCode) {
+            const couponInput = document.getElementById('coupon-input');
+            if (!couponCode) {
+                couponCode = couponInput.value.trim();
+            }
+
+            appliedCoupon = applicableCoupons.find(coupon => coupon.code === couponCode);
+
+            if (!appliedCoupon) {
+                if(allCoupons.find(coupon => coupon.code === couponCode)){
+                    document.getElementById('coupon-error').textContent = "Coupon Not Applicable";
+                    return;
+                }
+                document.getElementById('coupon-error').textContent = "Invalid coupon code";
+                return;
+            }
+
+            document.getElementById('coupon-error').textContent = "";
+
+            // Clear input and message
+            couponInput.value = '';
+            document.getElementById('coupon-msg').innerHTML = '';
+
+            // Display applied coupon
+            document.getElementById('applied-coupon').innerHTML = `
+                <div class="applied-coupon-card">
+                    <div class="coupon-code">${appliedCoupon.code}</div>
+                    <h3>${appliedCoupon.main}</h3>
+                    <p>${appliedCoupon.description}</p>
+                    <button id="remove-coupon" onclick="removeCoupon()">Remove Coupon</button>
+                </div>
+            `;
+
+            // Disable apply coupon button and input
+            const applyCouponButton = document.getElementById('apply-coupon-btn');
+            applyCouponButton.disabled = true;
+            couponInput.disabled = true;
+
+            const currentDate = new Date();
+            const validityStart = new Date(appliedCoupon.meta.validity_start);
+            const validityEnd = new Date(appliedCoupon.meta.validity_end);
+
+            if (currentDate < validityStart || currentDate > validityEnd) {
+                throw new Error("Coupon is not valid at this time");
+            }
+
+            let discount = 0;
+            let cashback = 0;
+            updatedCart = [...cart];
+            const originalTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+            if (appliedCoupon.discount_type === "cashback") {
+                cashback = appliedCoupon.discount_value;
+            } else if (appliedCoupon.meta.discount_on === "overall" && originalTotal >= appliedCoupon.meta.min_transaction) {
+                discount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : originalTotal * (appliedCoupon.discount_value / 100);
+                discount = Math.min(discount, appliedCoupon.meta.max_discount || discount);
+            } else if (appliedCoupon.meta.discount_on === "brand") {
+                let brandTotal = 0;
+                updatedCart.forEach(item => {
+                    if (item.brand === appliedCoupon.meta.discount_on_name) {
+                        brandTotal += item.totalPrice;
+                    }
+                });
+
+                if (brandTotal >= appliedCoupon.meta.min_transaction) {
+                    updatedCart = updatedCart.map(item => {
+                        if (item.brand === appliedCoupon.meta.discount_on_name) {
+                            let itemDiscount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : item.totalPrice * (appliedCoupon.discount_value / 100);
+                            itemDiscount = Math.min(itemDiscount, appliedCoupon.meta.max_discount || itemDiscount);
+                            discount += itemDiscount;
+                            return { ...item, discount: itemDiscount, price_after_discount: item.totalPrice - itemDiscount };
+                        }
+                        return item;
+                    });
+                }
+            } else if (appliedCoupon.meta.discount_on === "category") {
+                let categoryTotal = 0;
+                updatedCart.forEach(item => {
+                    if (item.category === appliedCoupon.meta.discount_on_name) {
+                        categoryTotal += item.totalPrice;
+                    }
+                });
+
+                if (categoryTotal >= appliedCoupon.meta.min_transaction) {
+                    updatedCart = updatedCart.map(item => {
+                        if (item.category === appliedCoupon.meta.discount_on_name) {
+                            let itemDiscount = appliedCoupon.discount_type === "fixed" ? appliedCoupon.discount_value : item.totalPrice * (appliedCoupon.discount_value / 100);
+                            itemDiscount = Math.min(itemDiscount, appliedCoupon.meta.max_discount || itemDiscount);
+                            discount += itemDiscount;
+                            return { ...item, discount: itemDiscount, price_after_discount: item.totalPrice - itemDiscount };
+                        }
+                        return item;
+                    });
+                }
+            }
+
+            const totalAfterDiscount = originalTotal - discount;
+            const paymentGateway = appliedCoupon.payment_gateway;
+
+            totalAmount = originalTotal;
+            discountAmount = discount;
+            grandTotal = totalAfterDiscount;
+
+            console.log({
+                updatedCart,
+                totalAmount,
+                grandTotal,
+                discountAmount,
+                cashback,
+                paymentGateway
+            });
+
+            if(appliedCoupon.payment_gateway !== "any") {
+                document.getElementById("payment-button").innerText = "Pay Via " + appliedCoupon.payment_gateway;
+            }
+            else {
+                document.getElementById("payment-button").innerText = "CONTINUE TO PAYMENT";
+            }
+
+            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+
+            const coupon_discount_text = document.getElementById("coupon-discount-text");
+            coupon_discount_text.innerText = "Coupon Discount (" + appliedCoupon.code + ")";
+
+            // Update totals and cart display
+            updateTotals();
+            updateCart();
+            
+            // Re-render coupon list to reflect changes
+            suggestCoupon();
+        }
+
+        function removeCoupon() {
+            // Remove applied coupon
+            appliedCoupon = null;
+
+            // Revert cart and totals to the state before applying the coupon
+            updatedCart = null;
+            totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            discountAmount = 0;
+            grandTotal = totalAmount;
+
+            // Reset discount amounts
+            const couponDiscountElement = document.getElementById('coupon-discount');
+            const grandTotalElement = document.getElementById('grand-total');
+
+            couponDiscountElement.textContent = `-₹0.00`;
+            grandTotalElement.textContent = `₹${totalAmount.toFixed(2)}`;
+
+            // Re-enable apply coupon button and input
+            const applyCouponButton = document.getElementById('apply-coupon-btn');
+            applyCouponButton.disabled = false;
+            document.getElementById('coupon-input').disabled = false;
+
+            // Remove applied coupon display
+            const appliedCouponElement = document.getElementById('applied-coupon');
+            appliedCouponElement.textContent = '';
+
+            // Remove remove-coupon button
+            const removeCouponButton = document.querySelector('#remove-coupon');
+            if (removeCouponButton) {
+                removeCouponButton.remove();
+            }
+
+            const coupon_discount_text = document.getElementById("coupon-discount-text");
+            coupon_discount_text.innerText = "Coupon Discount";
+
+            document.getElementById("payment-button").innerText = "CONTINUE TO PAYMENT";
+
+            // Update totals and cart display
+            updateTotals();
+            updateCart();
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+
+</html>
