@@ -7,7 +7,7 @@
 - Create free account -> app.nected.ai
 - Import the Rules (.json file given in each folder)
 - Test the rule or workflow.
-- Copy API link and Paste in code- ("API Link Here")
+- Copy API link from rule/workflow and Paste in code- ("API Link Here")
 - Customize the logic accoding to your need.
 
 - Official Blog- https://www.nected.ai/blog/zepto-like-coupon-reward-program-using-nected
