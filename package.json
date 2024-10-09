@@ -1,0 +1,15 @@
+{
+  "name": "custom-coupon-github",
+  "version": "1.0.0",
+  "description": "- Single page applicaton using HTML, CSS and JavaScript. For backend logic- Nected.ai Rule Engine/Workflow automation is used.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
